@@ -53,6 +53,62 @@ TEST(TEST_MATRIX, at){
     }
 }
 
+TEST(TEST_MATRIX, equality){
+    float a[110];
+    int n = 10;
+    int m = 11;
+    for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+            a[i*m+j]= i*m+j;
+        }
+    }
+    Matrix<float> A_1(a,n,m);
+    Matrix<float> A_2(a,n,m);
+    EXPECT_EQ(A_1,A_2);
+    A_2.at(1) /= 3.0;
+    A_2.at(1) *= 3.0;
+    EXPECT_EQ(A_1,A_2);
+    A_2.at(109) = 109;
+    EXPECT_EQ(A_1,A_2);
+    A_2.at(109) = 108.9999999;
+    EXPECT_EQ(A_1,A_2);
+    A_2.at(109) = 108.99;
+    EXPECT_NE(A_1,A_2);
+    
+    
+}
+
+TEST(TEST_MATRIX, isDiagonal){
+    float a[4];
+    int n = 2;
+    int m = 2;
+    a[0] = 1; a[1] = 0; a[2] = 0; a[3] = 1;
+    Matrix<float> A(a,n,m);
+    EXPECT_TRUE(A.isDiagonal());
+    A.at(0,1) = .0000000001;
+    A.at(1,0) = .00000000001;
+    EXPECT_TRUE(A.isDiagonal());
+    Matrix<float> B(a,4,1);
+    EXPECT_FALSE(B.isDiagonal());
+    float c[1000];
+    n = 10;
+    m = 10;
+    for(int i = 0; i < n; i++){
+        for(int j = 0 ; j < m; j++){
+            if(i == j){
+                c[i*m+j] = i;
+            } 
+            else{
+                c[i*m+j] = 0;
+            }
+        }
+    }
+    Matrix<float> C(c,n,m);
+    EXPECT_TRUE(C.isDiagonal());
+    C.at(9,8)=.001;
+    EXPECT_FALSE(C.isDiagonal());
+}
+
 /* [[ 1  -1   0]
  *  [-1   2   1]
  *  [ 0   1   1]]

@@ -48,14 +48,32 @@ class Matrix{
       return row_major[i*m + j];
     }
     
-    bool operator==(const Matrix<T>& rhs){
+    bool isSquare(){
+      return n==m;
+    }
+
+    bool isDiagonal(){
+      if(n!=m){
+        return false;
+      }
+      for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+          if(i != j && !equality(row_major[i*m+j], 0.0f)){
+            return false;
+          }
+        }
+      }
+      return true;
+    }
+
+    bool operator ==(const Matrix<T>& rhs) const{
       if(n != rhs.n || m != rhs.m){
         return false;
       }
       else{
         for(int i = 0; i < n; i++){
           for(int j = 0; j < m; j++){
-            if(!equality(row_major[i*n+j], rhs.row_major[i*n+j])){
+            if(!equality(row_major[i*m+j], rhs.row_major[i*m+j])){
               return false;
             }
           }
@@ -63,7 +81,23 @@ class Matrix{
       }
       return true;
     }
+    bool operator !=(const Matrix<T>& rhs) const{
+      if(n != rhs.n || m != rhs.m){
+        return true;
+      }
+      else{
+        for(int i = 0; i < n; i++){
+          for(int j = 0; j < m; j++){
+            if(!equality(row_major[i*m+j], rhs.row_major[i*m+j])){
+              return true;
+            }
+          }
+        }
+      }
+      return false;
+    }
 
+    
   private:
     T* row_major;
     int n;
