@@ -1,7 +1,11 @@
 #ifndef MATRIX_HPP
 #define MATRIX_HPP
 
+#include <utility>
+#include <iostream>
+#include <cmath>
 #include "basic_functions.hpp"
+
 
 template <class T>
 class Matrix{
@@ -12,6 +16,32 @@ class Matrix{
       row_major = new T[1];
       row_major[0] = T(0);
     }
+    
+    Matrix(const Matrix<T>& rhs){
+      n = rhs.n;
+      m = rhs.m;
+      row_major = new T[n*m];
+      for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+          row_major[i*m+j]= rhs.row_major[i*m+j];
+        }
+      }
+    }
+
+    Matrix<T>& operator =(const Matrix<T>& rhs){
+      if(row_major != nullptr){
+        delete[] row_major;
+      }
+      n = rhs.n;
+      m = rhs.m;
+      row_major = new T[n*m];
+      for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+          row_major[i*m+j]= rhs.row_major[i*m+j];
+        }
+      }
+    }
+
     Matrix(T* row_majorical, int n_t, int m_t){
       if(row_majorical==nullptr){
         n = n_t;
@@ -35,7 +65,9 @@ class Matrix{
       }
     }
     ~Matrix(){
-      delete[] row_major;
+      if(row_major != nullptr){
+        delete[] row_major;
+      }
     }
     T& at(int i){
       assert(row_major != nullptr);
@@ -58,7 +90,7 @@ class Matrix{
       }
       for(int i = 0; i < n; i++){
         for(int j = 0; j < m; j++){
-          if(i != j && !equality(row_major[i*m+j], 0.0f)){
+          if(i != j && !equality(row_major[i*m+j], T(0.0))){
             return false;
           }
         }
@@ -81,6 +113,7 @@ class Matrix{
       }
       return true;
     }
+
     bool operator !=(const Matrix<T>& rhs) const{
       if(n != rhs.n || m != rhs.m){
         return true;
@@ -96,7 +129,58 @@ class Matrix{
       }
       return false;
     }
+  
+    template <class U>
+    friend std::ostream& operator <<(std::ostream& out, const Matrix<U>& rhs){
+      for(int i = 0; i < rhs.n; i++){
+        out <<"| ";
+        for(int j = 0; j < rhs.m; j++){
+          out<<rhs.row_major[i*rhs.m+j];
+          if(j < rhs.m-1){
+            out<<", ";
+          }
+        }
+        out <<" |\n";
+      }
+      return out;
+    }
 
+    std::pair<Matrix<T>, Matrix<T> > lu_factorize(){
+      Matrix<T> L(nullptr, n, m);
+      Matrix<T> U(nullptr, n, m);
+      Matrix<T> A(row_major, n, m);
+      for(int k = 0; k < n; k++){
+        if(equality(A.at(k,k),T(0))){
+          std::cout<<"Encountered Zero pivot, returning\n";
+          return std::pair<Matrix<T>, Matrix<T> >(L,U);
+        }
+        for(int i = 0; i < n; i++){
+          L.at(i,k) = (A.at(i,k)/A.at(k,k));
+          U.at(k,i) = A.at(k,i);
+        }
+        for(int i = 0; i < n; i++){
+          for(int j = 0; j < n; j++){
+            A.at(i,j) -= (L.at(i,k)*U.at(k,j)); 
+          }
+        }
+      }
+      return std::pair<Matrix<T>, Matrix<T> >(L,U);
+    }
+
+    T col_norm(int column){
+      T sum = T(0);
+      for(int i = 0; i < n; i++){
+        sum += std::pow(at(i,column),2);
+      }
+      sqrt(sum);
+    }
+
+    std::pair<Matrix<T>, Matrix<T> > gram_schmidt(){
+      Matrix<T> Q(nullptr, n, m);
+      Matrix<T> R(nullptr, n, m);
+
+
+    }
     
   private:
     T* row_major;

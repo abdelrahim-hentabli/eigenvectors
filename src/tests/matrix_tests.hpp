@@ -2,6 +2,8 @@
 #define MATRIX_TESTS_HPP
 
 #include "../matrix.hpp"
+#include <utility>
+#include <iostream>
 
 TEST(TEST_MATRIX, at){
     float a[9];
@@ -109,6 +111,26 @@ TEST(TEST_MATRIX, isDiagonal){
     EXPECT_FALSE(C.isDiagonal());
 }
 
+
+TEST(TEST_MATRIX, lu_factorization){
+    Matrix<float>A(nullptr, 3,3);
+    A.at(0,0) = 1; A.at(0,1) = -1; A.at(0,2) = 0;
+    A.at(1,0) = -1; A.at(1,1) = 2; A.at(1,2) = 1;
+    A.at(2,0) = 0; A.at(2,1) = -1; A.at(2,2) = 1;
+    std::pair<Matrix<float>,Matrix<float> >LU = A.lu_factorize();
+    Matrix<float> L(nullptr, 3,3);
+    Matrix<float> U(nullptr, 3,3);
+    L.at(0,0) = 1; L.at(0,1) = 0; L.at(0,2) = 0;
+    L.at(1,0) = -1; L.at(1,1) = 1; L.at(1,2) = 0;
+    L.at(2,0) = 0; L.at(2,1) = -1; L.at(2,2) = 1;
+    
+    U.at(0,0) = 1; U.at(0,1) = -1; U.at(0,2) = 0;
+    U.at(1,0) = 0; U.at(1,1) = 1; U.at(1,2) = 1;
+    U.at(2,0) = 0; U.at(2,1) = 0; U.at(2,2) = 2;
+
+    EXPECT_EQ(L, LU.first);
+    EXPECT_EQ(U, LU.second);
+}
 /* [[ 1  -1   0]
  *  [-1   2   1]
  *  [ 0   1   1]]
