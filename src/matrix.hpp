@@ -105,7 +105,7 @@ class Matrix{
       }
       for(int i = 1; i < n; i++){
         for(int j = 0; j< i; j++){
-          if(equality(at(i,j),T(0))){
+          if(!equality(at(i,j),T(0))){
             return false;
           }
         }
