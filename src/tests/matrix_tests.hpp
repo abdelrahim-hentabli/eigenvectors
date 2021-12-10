@@ -107,7 +107,7 @@ TEST(TEST_MATRIX, isDiagonal){
     }
     Matrix<float> C(c,n,m);
     EXPECT_TRUE(C.isDiagonal());
-    C.at(9,8)=.001;
+    C.at(9,8)=.01;
     EXPECT_FALSE(C.isDiagonal());
 }
 
@@ -163,13 +163,13 @@ TEST(TEST_MATRIX, qr_factorization){
     Matrix<float> Q(nullptr, 3,3);
     Matrix<float> R(nullptr, 3,3);
 
-    Q.at(0,0) = .7071; Q.at(0,1) = .4082; Q.at(0,2) = .3818;
-    Q.at(1,0) = -.7071; Q.at(1,1) = .4082; Q.at(1,2) = .7361;
-    Q.at(2,0) = 0; Q.at(2,1) = -0.8165; Q.at(2,2) = .5589;
+    Q.at(0,0) = .7071; Q.at(0,1) = .4082; Q.at(0,2) = .5774;
+    Q.at(1,0) = -.7071; Q.at(1,1) = .4082; Q.at(1,2) = .5774;
+    Q.at(2,0) = 0; Q.at(2,1) = -0.8165; Q.at(2,2) = .5774;
     
-    R.at(0,0) = 1.4142; R.at(0,1) = -2.1213; R.at(0,2) = -.4082;
+    R.at(0,0) = 1.4142; R.at(0,1) = -2.1213; R.at(0,2) = -.7071;
     R.at(1,0) = 0; R.at(1,1) = 1.2247; R.at(1,2) = -.4082;
-    R.at(2,0) = 0; R.at(2,1) = 0; R.at(2,2) = 1.1927;
+    R.at(2,0) = 0; R.at(2,1) = 0; R.at(2,2) = 1.1547;
 
     EXPECT_EQ(Q, QR.first);
     EXPECT_EQ(R, QR.second);

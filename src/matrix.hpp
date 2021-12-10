@@ -40,6 +40,7 @@ class Matrix{
           row_major[i*m+j]= rhs.row_major[i*m+j];
         }
       }
+      return *this;
     }
 
     Matrix(T* row_majorical, int n_t, int m_t){
@@ -98,6 +99,19 @@ class Matrix{
       return true;
     }
 
+    bool isTriangular(){
+      if(n != m){
+        return false;
+      }
+      for(int i = 1; i < n; i++){
+        for(int j = 0; j< i; j++){
+          if(equality(at(i,j),T(0))){
+            return false;
+          }
+        }
+      }
+      return true;
+    }
     bool operator ==(const Matrix<T>& rhs) const{
       if(n != rhs.n || m != rhs.m){
         return false;
@@ -219,7 +233,16 @@ class Matrix{
       }
       return output;
     }
-    
+    Matrix<T> transpose(){
+      Matrix<T> output(nullptr, m, n);
+      for(int i = 0; i < n; i++){
+        for(int j = 0; j < m; j++){
+          output.at(j,i) = at(i,j); 
+        }
+      }
+      return output;
+    }
+
   private:
     T* row_major;
     int n;
