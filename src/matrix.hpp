@@ -204,6 +204,21 @@ class Matrix{
       }
       return std::pair<Matrix<T>, Matrix<T> >(Q, R);
     }
+
+    Matrix<T> operator *(Matrix<T> rhs){
+      Matrix<T> output(nullptr, n, rhs.m);
+      T sum;
+      for(int row = 0; row < n; row++){
+        for(int col = 0; col < n; col++){
+          sum = 0;
+          for(int j = 0; j < m; j++){
+            sum += at(row, j) * rhs.at(j, col); 
+          }
+          output.at(row,col) = sum;
+        }
+      }
+      return output;
+    }
     
   private:
     T* row_major;

@@ -132,6 +132,26 @@ TEST(TEST_MATRIX, lu_factorization){
     EXPECT_EQ(U, LU.second);
 }
 
+TEST(TEST_MATRIX, multiplication){
+    Matrix<float>A(nullptr, 3,3);
+    A.at(0,0) = 1; A.at(0,1) = 1; A.at(0,2) = 1;
+    A.at(1,0) = 2; A.at(1,1) = 1; A.at(1,2) = 1;
+    A.at(2,0) = 1; A.at(2,1) = 1; A.at(2,2) = 3;
+    
+    Matrix<float>B(nullptr, 3,3);
+    B.at(0,0) = 1; B.at(0,1) = 1; B.at(0,2) = 1;
+    B.at(1,0) = 1; B.at(1,1) = 1; B.at(1,2) = 1;
+    B.at(2,0) = 1; B.at(2,1) = 1; B.at(2,2) = 1;
+    
+    Matrix<float>C(nullptr, 3,3);
+    C.at(0,0) = 3; C.at(0,1) = 3; C.at(0,2) = 3;
+    C.at(1,0) = 4; C.at(1,1) = 4; C.at(1,2) = 4;
+    C.at(2,0) = 5; C.at(2,1) = 5; C.at(2,2) = 5;
+    
+
+    EXPECT_EQ(A * B, C);
+}
+
 TEST(TEST_MATRIX, qr_factorization){
     Matrix<float>A(nullptr, 3,3);
     A.at(0,0) = 1; A.at(0,1) = -1; A.at(0,2) = 0;
