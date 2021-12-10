@@ -168,18 +168,41 @@ class Matrix{
     }
 
     T col_norm(int column){
+      T sum = T(0.0);
+      for(int i = 0; i < n; i++){
+        sum += at(i,column) * at(i, column);
+      }
+      return sqrt(sum);
+    }
+
+    T dot(int col1, int col2){ //dot product of two columns
       T sum = T(0);
       for(int i = 0; i < n; i++){
-        sum += std::pow(at(i,column),2);
+        sum += (at(i,col1)*at(i,col2));
       }
-      sqrt(sum);
+      return sum;
     }
 
     std::pair<Matrix<T>, Matrix<T> > gram_schmidt(){
-      Matrix<T> Q(nullptr, n, m);
+      Matrix<T> Q(row_major, n, m);
       Matrix<T> R(nullptr, n, m);
-
-
+      T norm;
+      T dotVal;
+      for(int c = 0; c < m; c++){
+        for(int k = c-1; k >= 0; k--){
+          R.at(k,c) = Q.dot(c,k);
+        }
+        for(int k = c-1; k >=0; k--){
+          for(int i = 0; i < n; i++){
+            Q.at(i,c) = Q.at(i,c) - (R.at(k,c) * Q.at(i,k));
+          }
+        }
+        R.at(c,c) = Q.col_norm(c);
+        for(int i = 0; i < n; i++){
+          Q.at(i,c) /= R.at(c,c);
+        }
+      }
+      return std::pair<Matrix<T>, Matrix<T> >(Q, R);
     }
     
   private:

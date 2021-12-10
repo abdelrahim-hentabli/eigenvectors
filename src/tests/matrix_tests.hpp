@@ -131,6 +131,30 @@ TEST(TEST_MATRIX, lu_factorization){
     EXPECT_EQ(L, LU.first);
     EXPECT_EQ(U, LU.second);
 }
+
+TEST(TEST_MATRIX, qr_factorization){
+    Matrix<float>A(nullptr, 3,3);
+    A.at(0,0) = 1; A.at(0,1) = -1; A.at(0,2) = 0;
+    A.at(1,0) = -1; A.at(1,1) = 2; A.at(1,2) = 1;
+    A.at(2,0) = 0; A.at(2,1) = -1; A.at(2,2) = 1;
+    
+    std::pair<Matrix<float>,Matrix<float> >QR = A.gram_schmidt();
+    
+    Matrix<float> Q(nullptr, 3,3);
+    Matrix<float> R(nullptr, 3,3);
+
+    Q.at(0,0) = .7071; Q.at(0,1) = .4082; Q.at(0,2) = .3818;
+    Q.at(1,0) = -.7071; Q.at(1,1) = .4082; Q.at(1,2) = .7361;
+    Q.at(2,0) = 0; Q.at(2,1) = -0.8165; Q.at(2,2) = .5589;
+    
+    R.at(0,0) = 1.4142; R.at(0,1) = -2.1213; R.at(0,2) = -.4082;
+    R.at(1,0) = 0; R.at(1,1) = 1.2247; R.at(1,2) = -.4082;
+    R.at(2,0) = 0; R.at(2,1) = 0; R.at(2,2) = 1.1927;
+
+    EXPECT_EQ(Q, QR.first);
+    EXPECT_EQ(R, QR.second);
+}
+
 /* [[ 1  -1   0]
  *  [-1   2   1]
  *  [ 0   1   1]]
